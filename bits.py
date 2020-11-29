@@ -1,14 +1,20 @@
 __all__ = [
     'Bit',
-    'Array',
-
     'true',
     'false',
 ]
 
 
 class Bit:
-    __slots__ = ['value']
+    """
+    Bit(x) -> Bit
+
+    Returns Bit(1) when the argument x is true, Bit(0) otherwise.
+    The Bit(1) and Bit(0) are the only two instances of the class Bit.
+    """
+    value: bool
+
+    __slots__ = ('value',)
 
     # ----- Initialization Methods ----- #
     def __init__(self, value=False, /):
@@ -34,7 +40,7 @@ class Bit:
     # ----- Comparison Methods ----- #
     def __lt__(self, other, /):
         'Return self<other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 return false
             elif other:
@@ -46,7 +52,7 @@ class Bit:
 
     def __le__(self, other, /):
         'Return self<=other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return true
@@ -59,7 +65,7 @@ class Bit:
 
     def __eq__(self, other, /):
         'Return self==other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return true
@@ -75,7 +81,7 @@ class Bit:
 
     def __ne__(self, other, /):
         'Return self!=other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return false
@@ -91,7 +97,7 @@ class Bit:
 
     def __gt__(self, other, /):
         'Return self>other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if other:
                 return false
             elif self:
@@ -103,7 +109,7 @@ class Bit:
 
     def __ge__(self, other, /):
         'Return self>=other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if other:
                 if self:
                     return true
@@ -117,7 +123,7 @@ class Bit:
     # ----- Transformation Methods ----- #
     def __hash__(self, /):
         'Return hash(self).'
-        return 1 if self.value else 0
+        return 1 if self else 0
 
     def __bool__(self, /):
         'Return bool(self).'
@@ -126,7 +132,7 @@ class Bit:
     # ----- Calculation Methods ----- #
     def __and__(self, other, /):
         'Return self&other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return true
@@ -136,7 +142,7 @@ class Bit:
 
     def __rand__(self, other, /):
         'Return other&self.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return true
@@ -146,7 +152,7 @@ class Bit:
 
     def __xor__(self, other, /):
         'Return self^other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return false
@@ -162,7 +168,7 @@ class Bit:
 
     def __rxor__(self, other, /):
         'Return other^self.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 if other:
                     return false
@@ -178,7 +184,7 @@ class Bit:
 
     def __or__(self, other, /):
         'Return self|other.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 return true
             elif other:
@@ -190,7 +196,7 @@ class Bit:
 
     def __ror__(self, other, /):
         'Return other|self.'
-        if isinstance(other, (Boolean, bool)):
+        if isinstance(other, (Bit, bool)):
             if self:
                 return true
             elif other:
@@ -199,6 +205,11 @@ class Bit:
                 return false
         else:
             return NotImplemented
+
+    # ----- Mutational Methods ----- #
+    def copy(self, /):
+        'Return a copy of the bit.'
+        return Bit(self)
 
 
 true = Bit(True)
