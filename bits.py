@@ -1,3 +1,5 @@
+from obj import Immutable
+
 __all__ = [
     'Bit',
     'true',
@@ -5,7 +7,7 @@ __all__ = [
 ]
 
 
-class Bit:
+class Bit(Immutable):
     """
     Bit(x) -> Bit
 
@@ -20,13 +22,13 @@ class Bit:
     def __init__(self, value=False, /):
         'Initialize self.  See help(type(self)) for accurate signature.'
         if isinstance(value, bool):
-            self.value = value
+            super(Immutable, self).__setattr__('value', value)
         elif hasattr(value, '__bool__'):
-            self.value = value.__bool__()
+            super(Immutable, self).__setattr__('value', value.__bool__())
         elif hasattr(value, '__len__'):
-            self.value = False if len(value) == 0 else True
+            super(Immutable, self).__setattr__('value', len(value) != 0)
         else:
-            self.value = True
+            super(Immutable, self).__setattr__('value', True)
 
     # ----- Informal Methods ----- #
     def __repr__(self, /):
@@ -206,9 +208,9 @@ class Bit:
         else:
             return NotImplemented
 
-    # ----- Mutational Methods ----- #
+    # ----- Custom Mutable Methods ----- #
     def copy(self, /):
-        'Return a copy of the bit.'
+        'Return a copy of the binary digit.'
         return Bit(self)
 
 

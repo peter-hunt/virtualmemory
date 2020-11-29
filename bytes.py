@@ -1,6 +1,7 @@
 from typing import Iterable, List
 
 from bits import Bit, true, false
+from obj import Immutable
 
 __all__ = [
     'ByteUnit',
@@ -9,11 +10,11 @@ __all__ = [
 ]
 
 
-class ByteUnit:
+class ByteUnit(Immutable):
     pass
 
 
-class ByteUnit:
+class ByteUnit(Immutable):
     """
     ByteUnit(Bit, Bit, Bit, Bit,
              Bit, Bit, Bit, Bit) -> ByteUnit object initialized
@@ -32,35 +33,38 @@ class ByteUnit:
     def __init__(self, *args):
         'Initialize self.  See help(type(self)) for accurate signature.'
         if not args:
-            self.bits = [false for i in range(8)]
+            super(Immutable, self).__setattr__(
+                'bits', [false for i in range(8)]
+            )
         elif len(args) == 1:
             arg = args[0]
 
             if isinstance(arg, int):
                 if not 0 <= arg < 256:
-                    raise ValueError(
-                        f'a byte unit only accepts integer from 0 to 255, '
-                        f'not {arg}.'
-                    )
-                self.bits = [Bit(int(bit)) for bit in f'{arg:0>8b}']
+                    raise ValueError(f'a byte unit only accepts integer '
+                                     f'from 0 to 255, not {arg}.')
+                super(Immutable, self).__setattr__(
+                    'bits', [Bit(int(bit)) for bit in f'{arg:0>8b}']
+                )
             elif isinstance(arg, ByteUnit):
-                self.bits = [bit.copy() for bit in arg.bits]
+                super(Immutable, self).__setattr__(
+                    'bits', [bit.copy() for bit in arg.bits]
+                )
             elif isinstance(arg, Iterable):
                 arg = [*arg]
                 if len(arg) != 8:
-                    raise ValueError(
-                        f'a byte unit must have exactly 8 digits, '
-                        f'not {len(arg)}.'
-                    )
+                    raise ValueError(f'a byte unit must have exactly '
+                                     f'8 digits, not {len(arg)}.')
                 self._type_check(arg)
-                self.bits = [bit.copy() for bit in arg]
+                super(Immutable, self).__setattr__(
+                    'bits', [bit.copy() for bit in arg]
+                )
             else:
-                raise TypeError(
-                    f'cannot convert {type(arg).__name__} object '
-                    f'to a byte unit.')
+                raise TypeError(f'cannot convert {type(arg).__name__} object '
+                                f'to a byte unit.')
         elif len(args) == 8:
             self._type_check(args)
-            self.bits = [*args]
+            super(Immutable, self).__setattr__('bits', [*args])
         else:
             raise ValueError(f'ByteUnit only takes 1, 8 or no arguments, '
                              f'not {len(args)}.')
@@ -68,13 +72,11 @@ class ByteUnit:
     # ----- Initialization Helper Methods ----- #
     @staticmethod
     def _type_check(iterable: Iterable):
-        'Check the type for each element in iterable.  Used in initialization.'
+        'Check the type for elements in iterable.  Used in initialization.'
         for bit in iterable:
             if not isinstance(bit, Bit):
-                raise TypeError(
-                    f'digits of a bit unit must be bits, '
-                    f'not {type(bit).__name__}.'
-                )
+                raise TypeError(f'digits of a bit unit must be bits, '
+                                f'not {type(bit).__name__}.')
 
     # ----- Informal Methods ----- #
     def to_string(self, /):
@@ -140,17 +142,26 @@ class ByteUnit:
         else:
             return NotImplemented
 
+    # ----- Transformation Methods ----- #
+    def __hash__(self, /):
+        'Return hash(self).'
+        return hash(self.bits)
+
+    def __bool__(self, /):
+        'Return bool(self).'
+        return any(self.bits)
+
     # ----- Mutational Methods ----- #
     def copy(self, /):
         'Return a copy of the byte unit.'
         return ByteUnit((bit.copy() for bit in self.bits))
 
 
-class Bytes:
+class Bytes(Immutable):
     pass
 
 
-class Bytes:
+class Bytes(Immutable):
     """
     Bytes(iterable_of_byte_units) -> Bytes object initialized
                                      with given byte unit
@@ -168,14 +179,20 @@ class Bytes:
     def __init__(self, value=0):
         'Initialize self.  See help(type(self)) for accurate signature.'
         if isinstance(value, int):
-            self.bytes = [ByteUnit() for i in range(value)]
+            super(Immutable, self).__setattr__(
+                'bytes', [ByteUnit() for i in range(value)]
+            )
         elif isinstance(value, Bytes):
-            self.bytes = [byte.copy() for byte in value.bytes]
+            super(Immutable, self).__setattr__(
+                'bytes', [byte.copy() for byte in value.bytes]
+            )
         elif isinstance(value, Iterable):
-            self.bytes = [ByteUnit(item) for item in value]
+            super(Immutable, self).__setattr__(
+                'bytes', [ByteUnit(item) for item in value]
+            )
         else:
-            raise TypeError(
-                f'cannot convert {type(value).__name__} object to bytes.')
+            raise TypeError(f'cannot convert {type(value).__name__} '
+                            f'object to bytes.')
 
     # ----- Informal Methods ----- #
     def to_string(self, /):
@@ -233,31 +250,14 @@ class Bytes:
         else:
             return NotImplemented
 
-    # ----- Calculation Methods ----- #
-    def __add__(self, other, /):
-        'Return self+other.'
-        if isinstance(other, Bytes):
-            return Bytes(self.bytes + other.bytes)
-        elif isinstance(other, bytes):
-            return Bytes(self.bytes + Bytes(other).bytes)
-        else:
-            raise TypeError(f"can't concat {type(other).__name__} to bytes")
+    # ----- Transformation Methods ----- #
+    def __hash__(self, /):
+        'Return hash(self).'
+        return hash(self.bytes)
 
-    def __mul__(self, other, /):
-        'Return self*other.'
-        if isinstance(other, int):
-            return Bytes(self.bytes * other)
-        else:
-            raise TypeError(f"can't multiply sequence by non-int of "
-                            f"type '{type(other).__name__}'")
-
-    def __rmul__(self, other, /):
-        'Return other*self.'
-        if isinstance(other, int):
-            return Bytes(self.bytes * other)
-        else:
-            raise TypeError(f"can't multiply sequence by non-int of "
-                            f"type '{type(other).__name__}'")
+    def __bool__(self, /):
+        'Return bool(self).'
+        return len(self.bytes) != 0
 
     # ----- Iterable Methods ----- #
     def __len__(self, /):
@@ -289,6 +289,32 @@ class Bytes:
                 return False
         else:
             return NotImplemented
+
+    # ----- Calculation Methods ----- #
+    def __add__(self, other, /):
+        'Return self+other.'
+        if isinstance(other, Bytes):
+            return Bytes(self.bytes + other.bytes)
+        elif isinstance(other, bytes):
+            return Bytes(self.bytes + Bytes(other).bytes)
+        else:
+            raise TypeError(f"can't concat {type(other).__name__} to bytes")
+
+    def __mul__(self, other, /):
+        'Return self*other.'
+        if isinstance(other, int):
+            return Bytes(self.bytes * other)
+        else:
+            raise TypeError(f"can't multiply sequence by non-int of "
+                            f"type '{type(other).__name__}'")
+
+    def __rmul__(self, other, /):
+        'Return other*self.'
+        if isinstance(other, int):
+            return Bytes(self.bytes * other)
+        else:
+            raise TypeError(f"can't multiply sequence by non-int of "
+                            f"type '{type(other).__name__}'")
 
     # ----- Mutational Methods ----- #
     def copy(self, /):
