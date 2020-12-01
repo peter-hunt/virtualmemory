@@ -21,15 +21,6 @@ __all__ = [
     'DATA_TYPES',
 ]
 
-DATA_TYPES = (
-    Char, UnsignedChar,
-    Short, UnsignedShort,
-    Integer, UnsignedInteger,
-    Long, UnsignedLong,
-    LongLong, UnsignedLongLong,
-    Float, Double, LongDouble,
-)
-
 
 class Char(MutableIterable):
     """
@@ -343,6 +334,16 @@ class Double(Mutable):
 
 class LongDouble(Mutable):
     pass
+
+
+DATA_TYPES = (
+    Char, UnsignedChar,
+    Short, UnsignedShort,
+    Integer, UnsignedInteger,
+    Long, UnsignedLong,
+    LongLong, UnsignedLongLong,
+    Float, Double, LongDouble,
+)
 
 
 null = Char()

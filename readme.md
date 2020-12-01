@@ -13,10 +13,21 @@ git install https://github.com/peter-hunt/virtualmemory.git
 ## Usage
 
 ```python
-from virtualmemory import Bit
+from virtualmemory import *
 
-print(Bit(0))
-print(Bit(1))
+print(true)
+print(false)
+
+byte_group = Char(-48)
+print(byte_group)
+print(byte_group.to_str())
+print(byte_group.to_mem())
+
+character = Char(-48)
+print(character)
+print(character.to_str())
+print(character.to_mem())
+print(character.to_int())
 ```
 
 ## Contributing
