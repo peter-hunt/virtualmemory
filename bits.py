@@ -9,10 +9,15 @@ __all__ = [
 
 class Bit(Immutable):
     """
-    Bit(x) -> Bit
+    Immutable binary digit.
 
-    Returns Bit(1) when the argument x is true, Bit(0) otherwise.
+    Bit(obj) -> Bit
+    Bit() -> Bit(0)
+
+    Returns Bit(1) when the argument obj is true, Bit(0) otherwise.
     The Bit(1) and Bit(0) are the only two instances of the class Bit.
+
+    Construct an immutable binary digit from an object.
     """
     value: bool
 

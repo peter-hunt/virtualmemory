@@ -235,18 +235,26 @@ class Mutable(Object):
     # ----- Informal Methods ----- #
     def __repr__(self, /):
         'Return repr(self).'
-        return f'{type(self).__name__}({self.to_string()})'
+        return f'{type(self).__name__}({self.to_str()})'
 
     def __str__(self, /):
         'Return str(self).'
-        return f'{type(self).__name__}({self.to_string()})'
+        return f'{type(self).__name__}({self.to_str()})'
 
-    # ----- Custom Informal Methods ----- #
-    def to_string(self, /):
+    def to_str(self, /):
         'Return a raw representation of the object.'
-        return ''
+        pass
 
-    # ----- Custom Mutable Methods ----- #
+    # def to_mem(self, /):
+    #     'Return a hexadecimal representation of the object memory.'
+    #     pass
+
+    # ----- Transformation Methods ----- #
+    # def to_int(self, /):
+    #     'Return a python integer translation of the object.'
+    #     pass
+
+    # ----- Mutable Methods ----- #
     def copy(self, /):
         'Return a copy of the object.'
         pass
@@ -258,6 +266,20 @@ class Immutable(Object):
     """
 
     __slots__ = ()
+
+    # ----- Informal Methods ----- #
+    def to_str(self, /):
+        'Return a raw representation of the object.'
+        pass
+
+    # def to_mem(self, /):
+    #     'Return a hexadecimal representation of the object memory.'
+    #     pass
+
+    # ----- Transformation Methods ----- #
+    # def to_int(self, /):
+    #     'Return a python integer translation of the object.'
+    #     pass
 
     # ----- Attribute Methods ----- #
     def __getattr__(self, name):
@@ -296,25 +318,24 @@ class Iterable(Object):
     # ----- Iterable Methods ----- #
     def __len__(self, /):
         'Return len(self).'
-        pass
+        return NotImplemented
 
     def __getitem__(self, key, /):
         'Return self[key].'
-        pass
+        return NotImplemented
 
     def __iter__(self, /):
         'Implement iter(self).'
-        pass
+        return NotImplemented
 
     def __reversed__(self, /):
         'Return a reverse iterator over the object.'
-        pass
+        return NotImplemented
 
     def __contains__(self, item, /):
         'Return item in self.'
-        pass
+        return NotImplemented
 
-    # ----- Custom Iterable Methods ----- #
     def count(self, value, /):
         'Return number of occurrences of value.'
         pass
@@ -335,14 +356,13 @@ class MutableIterable(Mutable, Iterable):
 
     # ----- Mutable Iterable Methods ----- #
     def __setitem__(self, key, value, /):
-        'Return self[key].'
-        pass
+        'Set self[key] to value.'
+        return NotImplemented
 
     def __delitem__(self, key, /):
-        'Return self[key].'
-        pass
+        'Delete self[key].'
+        return NotImplemented
 
-    # ----- Custom Mutable Iterable Methods ----- #
     def clear(self, /):
         'Remove all items from mutable.'
         pass

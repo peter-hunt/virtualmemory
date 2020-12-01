@@ -4,5 +4,7 @@ from bits import *
 from bits import __all__ as __bits_all__
 from bytes import *
 from bytes import __all__ as __bytes_all__
+from data import *
+from data import __all__ as __data_all__
 
-__all__ = __obj_all__ + __bits_all__ + __bytes_all__
+__all__ = __obj_all__ + __bits_all__ + __bytes_all__ + __data_all__
